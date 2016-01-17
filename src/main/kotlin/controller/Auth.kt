@@ -2,6 +2,8 @@ package controller
 
 import model.ReaderUser
 import org.json.JSONObject
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Required
 import org.springframework.web.bind.annotation.*
 import service.UserService
 import javax.inject.Inject
@@ -14,17 +16,24 @@ import kotlin.text.isEmpty
  * Created by Semyon on 02.01.2016.
  */
 
-@Inject
-private var userService: UserService? = null;
-    public set
 
 @RestController
 @RequestMapping("/auth")
 class AuthController {
 
+    val userService: UserService;
+
+    @Inject
+    public constructor(userService: UserService) {
+        this.userService = userService;
+    }
+
+    /**
+     *Проверка валидности токена
+     */
     @RequestMapping(value = "/submittoken", method = arrayOf(RequestMethod.POST))
     fun auth(request: HttpServletRequest, @RequestParam(value = "token", defaultValue = "") token: String) : JSONObject {
-        val exists = userService!!.exists(token)
+        val exists = userService.exists(token)
         val json = JSONObject()
         json.put("success", exists)
         return json
@@ -43,6 +52,13 @@ public inline fun <T, R> T?.trycall(defValue: R, f: (T) -> R): R {
 @RequestMapping("/registration")
 class RegistrationController {
 
+    val userService: UserService;
+
+    @Inject
+    public constructor(userService: UserService) {
+        this.userService = userService;
+    }
+
     @RequestMapping(value = "/", method = arrayOf(RequestMethod.POST))
     fun register(request: HttpServletRequest, @RequestBody registrationData: Map<String, Any>) : JSONObject {
         val user = ReaderUser()
@@ -51,8 +67,8 @@ class RegistrationController {
         user.name = registrationData.get("name") as String
         user.vkId = registrationData.get("vkId") as String
         user.extra = registrationData.get("extra") as String
-        userService?.createUser(user)
-        val token = userService?.generateToken(user).trycall("") {
+        userService.createUser(user)
+        val token = userService.generateToken(user).trycall("") {
             it.token
         }
         var success = false

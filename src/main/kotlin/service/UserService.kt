@@ -37,9 +37,7 @@ class UserService {
     private val rand = SecureRandom()
     fun generateToken(user: ReaderUser): AuthToken? {
         val token = BigInteger(130, rand).toString(32)
-        val authToken = AuthToken()
-        authToken.user = user
-        authToken.token = token
+        val authToken = AuthToken(token, user)
         return tokenRepository?.save(authToken)
     }
 
