@@ -1,9 +1,6 @@
 package repository
 
-import model.AppLaunchEvent
-import model.AuthToken
-import model.ReadEvent
-import model.ReaderUser
+import model.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -40,5 +37,12 @@ interface ReadEventRepository : StatRepository<ReadEvent> {
 
 @Repository
 interface AppLaunchEventRepository : StatRepository<AppLaunchEvent> {
+
+}
+
+@Repository
+interface MangaRepository : JpaRepository<Manga, Long> {
+
+    fun findOneByMangaTitleAndRepositoryTitle(mangaTitle: String,  repositoryTitle: String): Optional<Manga>
 
 }
