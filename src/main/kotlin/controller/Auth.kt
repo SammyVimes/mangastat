@@ -2,14 +2,10 @@ package controller
 
 import model.ReaderUser
 import org.json.JSONObject
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Required
 import org.springframework.web.bind.annotation.*
 import service.UserService
 import javax.inject.Inject
-import javax.json.JsonObject
 import javax.servlet.http.HttpServletRequest
-import kotlin.collections.getValue
 import kotlin.text.isEmpty
 
 /**
@@ -32,7 +28,7 @@ class AuthController {
      *Проверка валидности токена
      */
     @RequestMapping(value = "/submittoken", method = arrayOf(RequestMethod.POST))
-    fun auth(request: HttpServletRequest, @RequestParam(value = "token", defaultValue = "") token: String) : JSONObject {
+    fun auth(request: HttpServletRequest, @RequestParam(value = "token", defaultValue = "") token: String): JSONObject {
         val exists = userService.exists(token)
         val json = JSONObject()
         json.put("success", exists)
@@ -60,7 +56,7 @@ class RegistrationController {
     }
 
     @RequestMapping(value = "/", method = arrayOf(RequestMethod.POST))
-    fun register(request: HttpServletRequest, @RequestBody registrationData: Map<String, Any>) : JSONObject {
+    fun register(request: HttpServletRequest, @RequestBody registrationData: Map<String, Any>): JSONObject {
         val user = ReaderUser()
         user.androidId = registrationData.get("androidId") as String
         user.gmail = registrationData.get("gmail") as String //fails here beacuse of actual NPE in java side

@@ -27,7 +27,7 @@ open class DBConfig {
     private var environment: Environment? = null;
 
     @Bean
-    @ConfigurationProperties(prefix="datasource.mine")
+    @ConfigurationProperties(prefix = "datasource.mine")
     open public fun dataSource(): DataSource {
         val env = environment!!;
 

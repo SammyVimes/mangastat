@@ -13,7 +13,7 @@ class RootController {
 
     @RequestMapping("/index")
     @ResponseBody
-    fun index(request: HttpServletRequest) : String {
+    fun index(request: HttpServletRequest): String {
         return ""
     }
 

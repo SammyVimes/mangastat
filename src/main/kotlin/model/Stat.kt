@@ -1,23 +1,30 @@
 package model
 
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 /**
  * Created by Semyon on 17.01.2016.
  */
-@Entity open class StatEvent(timestamp: Date) {
+@Entity open class StatEvent(user: ReaderUser?, timestamp: Date) {
 
     @Id
     @GeneratedValue
     val id: Long? = null
 
-    var timestamp: Date = timestamp;
+    @Column
+    var timestamp: Date = timestamp
 
-    constructor() : this(Date())
+    @Column
+    var user: ReaderUser? = user
+
+    constructor() : this(null, Date())
+}
+
+@Entity class AppLaunchEvent(user: ReaderUser?, timestamp: Date) : StatEvent(user, timestamp) {
+
+    constructor() : this(null, Date())
+
 }
 
 @Entity class ReadEvent : StatEvent {
@@ -25,11 +32,15 @@ import javax.persistence.ManyToOne
     @ManyToOne
     val manga: Manga?
 
+    @Column
     val startedReadingTimestamp: Date;
 
-    constructor(manga: Manga, startedReadingTimestamp: Date, timestamp: Date) : super(timestamp) {
+    constructor(user: ReaderUser?, manga: Manga?, startedReadingTimestamp: Date, timestamp: Date) : super(user, timestamp) {
         this.manga = manga
         this.startedReadingTimestamp = startedReadingTimestamp
     }
+
+    constructor() : this(null, null, Date(), Date())
+
 }
 
